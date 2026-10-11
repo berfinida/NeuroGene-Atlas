@@ -1,13 +1,15 @@
 # Changelog
 
-## 0.5.1 (Unpublished Release Candidate)
+## 0.5.1 (2026-10-12)
 
 - Rechecked original third-study columns, GEO/BioSample and Figshare evidence; restricted unresolved 10/9/8-dependent claims without changing scientific tables.
 - Added prominent dashboard cohort warnings and corrected stale publication-page reproduction wording; APIs carry exploratory-scope headers.
 - Prepared source-only Git hygiene, professional README with actual screenshots, MIT source license, citation/contribution/security/conduct documents and Actions workflows.
 - Added source-only software/API/browser tests, checksum-pinned non-overwriting data importer, whole-object Git credential audit and clean source packaging.
-- Preserved prior verified archives and Phase 5 evidence. Public source/data publication has not been performed.
+- Published owner-approved MIT source to `berfinida/NeuroGene-Atlas/main`; research data remain unpublished. Preserved prior verified archives and Phase 5 evidence.
 - Python advisory scan identified seven old Starlette advisories; upgraded FastAPI to 0.143.0 and Starlette to 1.3.1 with pinned transitive additions. Scientific R/numerical packages unchanged.
+- Hosted Ubuntu source-only CI passed: 14 software/API/archive tests, 2 browser checks, TypeScript, production build, dependency and source audits. Full-data hosted job intentionally skipped.
+- Removed machine-specific paths from publishable files, retained private historical evidence, and added source-path rejection to the publication audit. Standard MIT text is separate from third-party licensing notes.
 
 ## 0.5.0
 

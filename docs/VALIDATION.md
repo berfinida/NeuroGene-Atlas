@@ -2,7 +2,7 @@
 
 ## GitHub Preparation 0.5.1
 
-Current publication-preparation evidence is separate under `results/validation/github/`; prior Phase 5 ledgers remain historical and unchanged. See `GITHUB_RELEASE_READINESS.md` for newly executed outcomes, source-only tests, security scan and artifact checks. Hosted Actions is configured, not yet run. Third-study reproduction does not resolve its 10/9/8 cohort discrepancy.
+Current release evidence is separate under `results/validation/github/`; prior Phase 5 ledgers remain historical and unchanged. See `GITHUB_RELEASE_READINESS.md` for executed outcomes, source-only tests, security scan and artifact checks. [Initial hosted Ubuntu CI passed](https://github.com/berfinida/NeuroGene-Atlas/actions/runs/38176815275): 14 software/API/archive tests, 2 desktop/mobile Chromium tests, TypeScript, production build, dependency consistency and vulnerability scans, source privacy audit. The full-data job was intentionally skipped; research artifacts were not uploaded. Third-study reproduction does not resolve its 10/9/8 cohort discrepancy.
 
 ## Phase 5 Evidence
 

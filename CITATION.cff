@@ -1,8 +1,9 @@
 cff-version: 1.2.0
-message: "Cite the software and original datasets/methods separately. Local release candidate; no DOI assigned."
+message: "Cite the software and original datasets/methods separately. No DOI assigned."
 type: software
 title: NeuroGene Atlas
 version: 0.5.1
+repository-code: "https://github.com/berfinida/NeuroGene-Atlas"
 authors:
   - family-names: "Öztürk"
     given-names: "Berfin Nida"

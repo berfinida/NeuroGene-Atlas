@@ -2,7 +2,9 @@
 
 Reproducible multi-study transcriptomics and network-based exploratory candidate gene analysis in mouse dystrophin-deficient tibialis anterior muscle.
 
-**Author: Berfin Nida Öztürk. Version 0.5.1, local release candidate; not yet published.**
+**Author: Berfin Nida Öztürk. Version 0.5.1. Public MIT source; research data are not bundled.**
+
+[Source repository](https://github.com/berfinida/NeuroGene-Atlas) · [Versioned source releases](https://github.com/berfinida/NeuroGene-Atlas/releases)
 
 ## Research Objectives
 
@@ -50,13 +52,15 @@ Candidate weights: statistical/effect/consistency/pathway/network/replication = 
 
 Next.js 15.5.27, React 19.1.4, TypeScript 5.8.3, Recharts, Cytoscape.js, FastAPI, pandas, SciPy, NetworkX and Playwright.
 
-Locally tested: macOS ARM64, Node 22.23.1/npm 10.9.8, Python 3.14.5, R 4.4.3, DESeq2 1.46.0, apeglm 1.28.0, jsonlite 2.0.0. Use Node 22 and Python 3.14 with checked-in locks. Linux hosted CI is configured but not yet executed. Allow several GB for installed dependencies, browser binaries and analysis scratch space. Docker was unavailable; the optional container is not claimed tested.
+Locally tested: macOS ARM64, Node 22.23.1/npm 10.9.8, Python 3.14.5, R 4.4.3, DESeq2 1.46.0, apeglm 1.28.0, jsonlite 2.0.0. Use Node 22 and Python 3.14 with checked-in locks. Source-only Linux CI passed; full-data scientific validation and R reproduction remain local, not hosted. Allow several GB for installed dependencies, browser binaries and analysis scratch space. Docker was unavailable; the optional container is not claimed tested.
 
 ## Installation
 
-Until publication, use the source ZIP or existing checkout. No public clone or research-bundle URL exists yet.
+Clone the public source or extract the source Release ZIP. No public research-bundle URL is provided.
 
 ```sh
+git clone https://github.com/berfinida/NeuroGene-Atlas.git
+cd NeuroGene-Atlas
 python3.14 -m venv .venv
 .venv/bin/python -m pip install -r backend/requirements.lock.txt
 .venv/bin/python -m pip check
@@ -134,7 +138,7 @@ Full suite requires the verified research bundle and actual backend/frontend:
   --out-dir results/validation/github
 ```
 
-Stop the production frontend before rebuilding its `.next` directory. Actions runs source-only Python/API/browser tests, dependency checks, TypeScript and build on push/PR. A manual research job accepts an approved public HTTPS bundle URL and independently verified SHA-256; no private credentials are required. No hosted CI success is claimed. [Release readiness](GITHUB_RELEASE_READINESS.md) records actual local outcomes and command ledgers.
+Stop the production frontend before rebuilding its `.next` directory. [Hosted source-only CI passed](https://github.com/berfinida/NeuroGene-Atlas/actions/runs/38176815275): 14 Python/API/archive tests, 2 Chromium desktop/mobile tests, dependency checks, source privacy audit, TypeScript and production build. Actions reruns on push/PR. The manual research job is intentionally skipped: no approved public research bundle exists. Its optional inputs require an approved HTTPS URL and independently verified SHA-256. Local full-data validation is separate: 62 Python/statistical tests (23 API tests), 30 browser checks and 151 API/download requests passed. [Release validation](GITHUB_RELEASE_READINESS.md) records scope and limitations.
 
 ## Architecture
 
@@ -161,6 +165,6 @@ MIT applies to original code/documentation, not external datasets, third-party d
 
 ## Citation And Contributions
 
-[CITATION.cff](CITATION.cff) records author/version; no DOI or archived release is claimed. Cite original datasets and DESeq2/apeglm/Reactome/STRING methods separately. An approved future Zenodo deposition may provide a DOI.
+[CITATION.cff](CITATION.cff) records author/version and source URL; no DOI or Zenodo archival is claimed. Cite original datasets and DESeq2/apeglm/Reactome/STRING methods separately. An approved future Zenodo deposition may provide a DOI.
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Preserve scientific provenance, label synthetic software fixtures, and document executed tests. Public publication requires owner approval.
+Read [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Preserve scientific provenance, label synthetic software fixtures, and document executed tests. Owner approval covers this public MIT source release only, not research-data redistribution.

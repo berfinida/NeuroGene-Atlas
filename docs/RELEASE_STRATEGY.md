@@ -2,7 +2,7 @@
 
 ## Source Versus Research Artifacts
 
-Version 0.5.1 source is Git-ready but unpublished. Ignore `data/`, `results/`, `release/`, installed dependencies, caches and ZIPs. Original local research evidence remains intact. Previous 0.5.0 FINAL ZIPs and extraction evidence are historical verified artifacts, not the new source release.
+Version 0.5.1 source is public on the `main` branch of [berfinida/NeuroGene-Atlas](https://github.com/berfinida/NeuroGene-Atlas). Ignore `data/`, `results/`, `release/`, installed dependencies, caches and ZIPs. Original local research evidence remains intact. Previous 0.5.0 FINAL ZIPs and extraction evidence are historical verified artifacts, not the new source release.
 
 The local source ZIP contains source/configuration, locks, tests, documentation and actual screenshots only. The approximately 100 MiB raw-inclusive research ZIP must **not** enter ordinary Git history or be uploaded publicly until redistribution rights and owner approval are established. A future approved derived-only bundle should avoid duplicating raw inputs and preserve original-input URLs/checksums.
 
@@ -26,8 +26,8 @@ New source artifacts and exact per-file hashes are recorded separately in `relea
 
 ## GitHub And Zenodo
 
-Intended account `berfinida`; name `NeuroGene-Atlas`; main branch. The authenticated read-only query found no target repository. No remote, repository, release or DOI has been created by this preparation.
+Owner-approved public repository: `berfinida/NeuroGene-Atlas`, branch `main`, MIT source license. GitHub private vulnerability reporting is enabled. No DOI or public research-bundle URL is claimed.
 
-After explicit owner approval, publish verified source only. Configure private vulnerability reporting and branch protection; review the first hosted CI run. A source-only draft release can use the 0.5.1 ZIP and SHA manifest. Scientific datasets need a separate rights review and approval. Consider Zenodo software archival after a versioned release exists; do not claim a DOI before deposition. Archived data require original-provider terms, appropriate attribution and an explicit license decision.
+The `v0.5.1` Release is source-only: upload exactly one verified source ZIP, with its SHA-256 in the Release notes; do not upload the research ZIP or a separate data asset. Hosted source CI must pass before publication; the initial Linux run passed. Branch protection is a separate maintainer configuration decision. Scientific datasets need a separate rights review and approval. Consider Zenodo software archival after a versioned release exists; do not claim a DOI before deposition. Archived data require original-provider terms, appropriate attribution and an explicit license decision.
 
-Exact conditional publication commands are in `GITHUB_RELEASE_READINESS.md`; nothing is automatically pushed or uploaded by the local packaging scripts.
+Release controls and validation scope are in `GITHUB_RELEASE_READINESS.md`; nothing is automatically pushed or uploaded by the local packaging scripts.

@@ -1,6 +1,6 @@
 # GitHub Source Release Validation
 
-Version 0.5.1. Owner approval explicitly permits public MIT source publication to `berfinida/NeuroGene-Atlas`. Research data publication is not approved. No DOI is claimed.
+Version 0.5.1. Owner-approved public MIT source is on [berfinida/NeuroGene-Atlas/main](https://github.com/berfinida/NeuroGene-Atlas). Research data publication is not approved. No DOI is claimed.
 
 ## Scientific Scope
 
@@ -44,4 +44,4 @@ Only clean source is staged; raw/processed data, scientific outputs, archives, i
 
 Publish only `main` and the `v0.5.1` source Release. The Release must have exactly one uploaded asset: `NeuroGene_Atlas_Source_v0.5.1.zip`. Never upload the research ZIP. MIT covers original source/documentation, not third-party data or dependencies; see [license review](docs/DEPENDENCY_AND_DATA_LICENSES.md).
 
-Hosted source-only CI must complete before the Release. The manual research job is intentionally skipped because no approved public research bundle exists. Local full-data validation is not hosted full-data validation. No tested Docker execution, FASTQ realignment, clinical/causal validation, penetration test or full accessibility certification is claimed.
+The [initial hosted Ubuntu source-only CI passed](https://github.com/berfinida/NeuroGene-Atlas/actions/runs/38176815275): 14 Python/API/archive tests, 2 Chromium desktop/mobile tests, TypeScript, production build, pip consistency, Python/npm vulnerability scans and source privacy audit. Release-target CI must also succeed before publication. The manual research job is intentionally skipped because no approved public research bundle exists. Local full-data validation is not hosted full-data validation. No tested Docker execution, FASTQ realignment, clinical/causal validation, penetration test or full accessibility certification is claimed.
