@@ -1,0 +1,9 @@
+name: neurogene-r
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base=4.4.3
+  - bioconductor-deseq2=1.46.0
+  - bioconductor-apeglm=1.28.0
+  - r-jsonlite=2.0.0

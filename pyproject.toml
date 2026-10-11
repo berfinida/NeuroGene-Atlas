@@ -1,0 +1,16 @@
+[project]
+name = "neurogene-atlas"
+version = "0.5.1"
+description = "Reproducible multi-study transcriptomics and network-based candidate gene exploration platform."
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=2.0",
+  "pandas>=2.2"
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

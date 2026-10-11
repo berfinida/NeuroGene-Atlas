@@ -1,0 +1,109 @@
+name: Source and research validation
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      bundle_url:
+        description: Public HTTPS research bundle URL (optional; unpublished locally)
+        type: string
+      bundle_sha256:
+        description: Independently verified bundle SHA-256
+        type: string
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: python -m pip install -r backend/requirements.lock.txt
+      - run: python -m pip check
+      - name: Audit pinned Python dependencies
+        run: |
+          python -m venv "$RUNNER_TEMP/security-tools"
+          "$RUNNER_TEMP/security-tools/bin/python" -m pip install pip-audit==2.9.0
+          "$RUNNER_TEMP/security-tools/bin/python" -m pip_audit -r backend/requirements.lock.txt --no-deps --disable-pip
+      - run: python scripts/repository_audit.py
+      - run: python -m unittest discover -s tests/core -v
+      - run: npm ci
+        working-directory: frontend
+      - run: npm audit --json
+        working-directory: frontend
+      - run: npm run typecheck
+        working-directory: frontend
+      - run: npm run build
+        working-directory: frontend
+        env:
+          API_INTERNAL_URL: http://127.0.0.1:8000
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - name: Source-only browser smoke (no scientific data fixtures)
+        run: |
+          python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 > "$RUNNER_TEMP/api.log" 2>&1 &
+          api=$!
+          (cd frontend && npm run start -- --port 3000) > "$RUNNER_TEMP/ui.log" 2>&1 &
+          ui=$!
+          trap 'kill "$api" "$ui" || true' EXIT
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3000/ >/dev/null && curl -fsS http://127.0.0.1:8000/openapi.json >/dev/null; then break; fi
+            sleep 1
+          done
+          cd frontend
+          E2E_CORE=1 npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-validation
+          path: |
+            results/validation/github/repository_audit.json
+            frontend/test-results/
+  research:
+    if: github.event_name == 'workflow_dispatch' && inputs.bundle_url != '' && inputs.bundle_sha256 != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install -r backend/requirements.lock.txt
+      - name: Fetch approved public data, never private credentials
+        env:
+          BUNDLE_URL: ${{ inputs.bundle_url }}
+          BUNDLE_SHA: ${{ inputs.bundle_sha256 }}
+        run: python scripts/install_research_bundle.py --url "$BUNDLE_URL" --sha256 "$BUNDLE_SHA"
+      - run: npm ci
+        working-directory: frontend
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - run: python scripts/final_validate.py --build-only --api-url http://127.0.0.1:8000 --out-dir results/validation/github
+      - name: Full real-data suite and download checks
+        run: |
+          python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 > "$RUNNER_TEMP/api.log" 2>&1 &
+          api=$!
+          (cd frontend && npm run start -- --port 3000) > "$RUNNER_TEMP/ui.log" 2>&1 &
+          ui=$!
+          trap 'kill "$api" "$ui" || true' EXIT
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3000/ >/dev/null && curl -fsS http://127.0.0.1:8000/openapi.json >/dev/null; then break; fi
+            sleep 1
+          done
+          python scripts/final_validate.py --api-url http://127.0.0.1:8000 --base-url http://127.0.0.1:3000 --out-dir results/validation/github
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-data-validation
+          path: results/validation/github/

@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "Cite the software and original datasets/methods separately. Local release candidate; no DOI assigned."
+type: software
+title: NeuroGene Atlas
+version: 0.5.1
+authors:
+  - family-names: "Öztürk"
+    given-names: "Berfin Nida"
+abstract: "Reproducible multi-study mouse transcriptomics and network-based exploratory candidate gene analysis. Not clinical validation."
+license: MIT
+keywords:
+  - transcriptomics
+  - DESeq2
+  - reproducibility
+  - muscular dystrophy

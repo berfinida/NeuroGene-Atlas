@@ -1,0 +1,62 @@
+{
+  "accession": "GSE156496",
+  "title": "Transcriptome analysis of the TA muscles from WT and Dmd Exon 51 Knockout mice",
+  "organism": "Mus musculus",
+  "taxid": "10090",
+  "tissue": "Tibialis Anterior (TA) muscle",
+  "genome_build": "mm10",
+  "reference_group": "WT",
+  "case_group": "D51",
+  "contrast": "D51_vs_WT",
+  "deg_thresholds": {
+    "adjusted_p_value": 0.05,
+    "absolute_log2_fold_change": 1.0
+  },
+  "low_count_filter": {
+    "minimum_count": 10,
+    "minimum_samples": 3
+  },
+  "expected_samples": [
+    {
+      "geo_accession": "GSM4732625",
+      "count_column": "WT_1",
+      "condition": "WT",
+      "replicate": 1
+    },
+    {
+      "geo_accession": "GSM4732626",
+      "count_column": "WT_2",
+      "condition": "WT",
+      "replicate": 2
+    },
+    {
+      "geo_accession": "GSM4732627",
+      "count_column": "WT_3",
+      "condition": "WT",
+      "replicate": 3
+    },
+    {
+      "geo_accession": "GSM4732628",
+      "count_column": "D51_4",
+      "condition": "D51",
+      "replicate": 1
+    },
+    {
+      "geo_accession": "GSM4732629",
+      "count_column": "D51_5",
+      "condition": "D51",
+      "replicate": 2
+    },
+    {
+      "geo_accession": "GSM4732630",
+      "count_column": "D51_6",
+      "condition": "D51",
+      "replicate": 3
+    }
+  ],
+  "sources": {
+    "geo_record": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE156496",
+    "series_matrix": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE156nnn/GSE156496/matrix/GSE156496_series_matrix.txt.gz",
+    "raw_counts": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE156nnn/GSE156496/suppl/GSE156496_RNAseq_RawCountTable.txt.gz"
+  }
+}
