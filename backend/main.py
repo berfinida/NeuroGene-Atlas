@@ -8,11 +8,36 @@ import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse, Response
+from backend.runtime import Settings, VERSION, configure
 
-ROOT = Path(__file__).resolve().parents[1]
+SETTINGS = Settings.from_env()
+ROOT = SETTINGS.root
 OUT = ROOT / "results/GSE156496/deseq2"
-app = FastAPI(title="NeuroGene Atlas", version="0.5.1")
+app = FastAPI(title="NeuroGene Atlas", version=VERSION)
+FileResponse = configure(app, SETTINGS)
 DISCOVERY = ROOT / "results/discovery"
+
+
+@app.get("/healthz")
+def health():
+    return {"status": "ok", "version": VERSION, "mode": SETTINGS.mode}
+
+
+@app.get("/readyz")
+def readiness():
+    if not (OUT / "summary.json").is_file():
+        raise HTTPException(503, "Scientific data unavailable")
+    return {"status": "ready", "manifest_sha256": app.state.serving["manifest_sha256"]}
+
+
+@app.get("/api/runtime")
+def runtime():
+    return {"mode": SETTINGS.mode, "version": VERSION,
+            "label": "Research workspace" if SETTINGS.mode == "research" else "Public Research Demo",
+            "publication_status": "local review preview; not approved for publication" if SETTINGS.mode == "preview" else SETTINGS.mode,
+            "restricted_views": [] if SETTINGS.mode == "research" else ["Publication", "Reports"],
+            "raw_expression_available": SETTINGS.mode == "research",
+            "manifest_sha256": app.state.serving["manifest_sha256"]}
 
 
 @app.middleware("http")
@@ -76,6 +101,8 @@ def export_genes(q: str = "", padj: float = Query(0.05, gt=0, le=1), lfc: float 
 
 @app.get("/api/expression/{gene_id}")
 def expression(gene_id: str, scale: Literal["raw", "normalized", "vst"] = "normalized"):
+    if SETTINGS.mode != "research" and scale == "raw":
+        raise HTTPException(403, "Raw counts are excluded from the reviewed demo bundle")
     matrix = expression_matrix(scale)
     if gene_id not in matrix.index:
         raise HTTPException(404, "Gene not available in this expression matrix")
@@ -107,6 +134,8 @@ Study = Literal["GSE156496", "GSE132741", "GSE284723"]
 
 @app.get("/api/studies/{study}")
 def study_dataset(study: Study):
+    if SETTINGS.mode != "research":
+        return json.loads((ROOT / "snapshots" / f"{study}.json").read_text())
     folder = ROOT / "results" / study / "deseq2"
     cohort = next(c for c in json.loads((ROOT / "results/phase4/audit.json").read_text())["cohorts"]
                   if c["accession"] == study)
@@ -135,6 +164,8 @@ def study_dataset(study: Study):
 
 @app.get("/api/studies/{study}/download/{artifact}")
 def study_download(study: Study, artifact: Literal["counts", "metadata", "unshrunken", "apeglm", "pca", "distances", "session"]):
+    if SETTINGS.mode != "research" and artifact not in {"pca", "distances"}:
+        raise HTTPException(403, "Only reviewed study PCA and distance artifacts are available")
     folder = ROOT / "results" / study / "deseq2"
     name = "deseq2_D51_vs_WT_" if study == "GSE156496" else ""
     paths = {"counts": ROOT / "data/processed" / study / "count_matrix.csv",
@@ -357,6 +388,8 @@ FINAL_DOCUMENTS = ("FINAL_SCIENTIFIC_AUDIT.md", "FINAL_TECHNICAL_AUDIT.md", "PUB
 
 @app.get("/api/final-audit")
 def final_audit():
+    if SETTINGS.mode != "research":
+        return json.loads((ROOT / "snapshots/final_audit.json").read_text())
     folder = ROOT / "results/validation/phase5"
     if not (folder / "reproduction.json").exists():
         raise HTTPException(503, "Final reproduction audit unavailable")

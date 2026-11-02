@@ -52,7 +52,7 @@ jobs:
         run: |
           python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 > "$RUNNER_TEMP/api.log" 2>&1 &
           api=$!
-          (cd frontend && npm run start -- --port 3000) > "$RUNNER_TEMP/ui.log" 2>&1 &
+          (cd frontend && API_INTERNAL_URL=http://127.0.0.1:8000 NEUROGENE_ALLOW_LOCAL_API=1 npm run start -- --port 3000) > "$RUNNER_TEMP/ui.log" 2>&1 &
           ui=$!
           trap 'kill "$api" "$ui" || true' EXIT
           for i in $(seq 1 60); do
@@ -94,7 +94,7 @@ jobs:
         run: |
           python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 > "$RUNNER_TEMP/api.log" 2>&1 &
           api=$!
-          (cd frontend && npm run start -- --port 3000) > "$RUNNER_TEMP/ui.log" 2>&1 &
+          (cd frontend && API_INTERNAL_URL=http://127.0.0.1:8000 NEUROGENE_ALLOW_LOCAL_API=1 npm run start -- --port 3000) > "$RUNNER_TEMP/ui.log" 2>&1 &
           ui=$!
           trap 'kill "$api" "$ui" || true' EXIT
           for i in $(seq 1 60); do

@@ -1,0 +1,50 @@
+# PREPARATION ONLY. Requires explicit hosting, spending, DNS and data approval.
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      NEUROGENE_MODE: public
+      NEUROGENE_ENV: production
+      NEUROGENE_ALLOWED_HOSTS: api,localhost,127.0.0.1
+      NEUROGENE_PUBLIC_APPROVAL_SHA256: ${DATA_APPROVAL_SHA256:?Owner must approve the exact results manifest}
+    volumes:
+      - ${APPROVED_RESULTS_DIR:?Reviewed results directory required}:/data:ro
+    read_only: true
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=64m"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    mem_limit: 1g
+    restart: unless-stopped
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    environment:
+      API_INTERNAL_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    read_only: true
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=64m", "/app/.next/cache:rw,noexec,nosuid,size=64m"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    mem_limit: 512m
+    restart: unless-stopped
+  edge:
+    image: caddy:2.11.7@sha256:f2a1290d0463aad60660d4ec134943f183ee2a5f6c3eb7bf32dd984f2f020772
+    environment:
+      PUBLIC_DOMAIN: ${PUBLIC_DOMAIN:?Explicitly approved domain required}
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [web]
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+volumes:
+  caddy_data:
+  caddy_config:

@@ -7,6 +7,6 @@ scipy==1.17.1
 httpx==0.28.1
 networkx==3.4.2
 matplotlib==3.10.9
-pypdf==6.20.0
+pypdf==6.21.4
 openpyxl==3.1.5
 Markdown==3.8.2

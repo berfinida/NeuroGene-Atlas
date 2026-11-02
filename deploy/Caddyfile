@@ -1,0 +1,8 @@
+{$PUBLIC_DOMAIN} {
+    encode zstd gzip
+    header Strict-Transport-Security "max-age=31536000"
+    header X-Content-Type-Options "nosniff"
+    header Referrer-Policy "no-referrer"
+    header X-Frame-Options "DENY"
+    reverse_proxy web:3000
+}

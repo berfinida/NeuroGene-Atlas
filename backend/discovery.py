@@ -5,14 +5,22 @@ from pathlib import Path
 
 import networkx as nx
 import pandas as pd
+from backend.runtime import Settings
 
-ROOT = Path(__file__).resolve().parents[1]
+SETTINGS = Settings.from_env()
+ROOT = SETTINGS.root
 NETWORK = ROOT / "results/discovery/network"
 DE = ROOT / "results/GSE156496/deseq2"
 
 
 @lru_cache(maxsize=16)
 def graph_tables(confidence=.7):
+    if SETTINGS.mode != "research":
+        if confidence not in (.4, .7, .9):
+            from fastapi import HTTPException
+            raise HTTPException(422, "Reviewed network thresholds are 0.4, 0.7 and 0.9")
+        return (pd.read_csv(NETWORK / f"nodes_{confidence}.csv"),
+                pd.read_csv(NETWORK / "edges.csv").query("score >= @confidence").copy())
     mapping = pd.read_csv(NETWORK / "mapping.csv")
     edges = pd.read_csv(NETWORK / "edges.csv")
     edges = edges[edges.score >= confidence].copy()

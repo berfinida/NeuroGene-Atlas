@@ -2,6 +2,7 @@
 import hashlib
 import json
 from pathlib import Path
+import re
 import sys
 import zipfile
 
@@ -14,10 +15,13 @@ def main():
     record = audit()
     if record['status'] != 'passed':
         raise ValueError('Repository audit must pass before packaging')
-    folder = ROOT/'release/github'
+    version = json.loads((ROOT/'frontend/package.json').read_text())['version']
+    if not re.fullmatch(r'\d+\.\d+\.\d+(?:-rc\.\d+)?', version):
+        raise ValueError('Invalid release version')
+    folder = ROOT/('release/candidates' if '-rc.' in version else 'release/github')
     folder.mkdir(parents=True,exist_ok=True)
-    destination = folder/'NeuroGene_Atlas_Source_v0.5.1.zip'
-    with zipfile.ZipFile(destination,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as bundle:
+    destination = folder/f'NeuroGene_Atlas_Source_v{version}.zip'
+    with zipfile.ZipFile(destination,'x',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as bundle:
         for item in record['files']:
             bundle.write(ROOT/item['path'],item['path'])
         bundle.writestr('SOURCE_MANIFEST.json',json.dumps(record['files'],indent=2)+'\n')

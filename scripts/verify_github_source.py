@@ -67,7 +67,8 @@ def main():
                                      ('frontend',['npm','run','start','--','--port','3007'],scratch/'frontend')]:
                 handle = (OUT/(name+'.log')).open('w')
                 handles.append(handle)
-                process = subprocess.Popen(command,cwd=cwd,stdout=handle,stderr=subprocess.STDOUT,start_new_session=True)
+                env = dict(os.environ, API_INTERNAL_URL='http://127.0.0.1:8007', NEUROGENE_ALLOW_LOCAL_API='1')
+                process = subprocess.Popen(command,cwd=cwd,env=env,stdout=handle,stderr=subprocess.STDOUT,start_new_session=True)
                 services.append(process)
                 commands.append({'command':command,'cwd':str(cwd),'service':True,'pid':process.pid})
             for attempt in range(90):

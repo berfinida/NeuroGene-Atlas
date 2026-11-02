@@ -1,6 +1,6 @@
 [project]
 name = "neurogene-atlas"
-version = "0.5.1"
+version = "0.6.0rc1"
 description = "Reproducible multi-study transcriptomics and network-based candidate gene exploration platform."
 requires-python = ">=3.11"
 dependencies = [

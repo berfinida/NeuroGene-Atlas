@@ -36,7 +36,7 @@ def run(name, command, cwd=ROOT, environment=None):
 
 
 def live_api(base):
-    paths = ["datasets", "qc", "genes", "genes/export", "expression/ENSMUSG00000045103",
+    paths = ["runtime", "datasets", "qc", "genes", "genes/export", "expression/ENSMUSG00000045103",
              "gene-search?q=Dmd", "volcano", "pathways", "network", "network/export/nodes",
              "network/export/edges", "replication", "replication/genes", "replication/pathways",
              "candidates", "evidence", "evidence/compare?genes=ENSMUSG00000030789",
@@ -93,6 +93,8 @@ def main():
         result, _ = run("production_build", ["npm", "run", "build"], ROOT / "frontend", {"API_INTERNAL_URL": args.api_url})
         (OUT / "build.json").write_text(json.dumps(result, indent=2) + "\n")
         sys.exit(result["exit_code"])
+    if not (OUT / "build.json").is_file():
+        parser.error("Run --build-only with the same --out-dir before full validation")
     prior = OUT / "tests.json"
     if prior.exists():
         saved = OUT / "history" / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
@@ -101,6 +103,9 @@ def main():
             if (OUT / name).exists():
                 shutil.copy2(OUT / name, saved / name)
     checks = {}
+    checks["software"], software_output = run("software", [sys.executable, "-m", "unittest", "discover", "-s", "tests/core", "-v"])
+    software_count = re.search(r"Ran (\d+) tests", software_output)
+    checks["software"]["tests_run"] = int(software_count.group(1)) if software_count else None
     checks["python"], output = run("python", [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"])
     count = re.search(r"Ran (\d+) tests", output)
     checks["python"]["tests_run"] = int(count.group(1)) if count else None
@@ -122,7 +127,8 @@ def main():
     for image in (ROOT / "frontend/test-results").glob("*.png"):
         shutil.copy2(image, screenshots / image.name)
     checks["production_build"] = json.loads((OUT / "build.json").read_text())
-    record = {"phase": 5, "audit_scope": "GitHub preparation" if OUT.name == "github" else "Phase 5",
+    phase = 6 if OUT.name.startswith("phase6") else 5
+    record = {"phase": phase, "audit_scope": "GitHub preparation" if OUT.name == "github" else f"Phase {phase}",
               "status": "passed" if all(c["status"] == "passed" for c in checks.values()) else "failed",
               "checked_at_utc": datetime.now(timezone.utc).isoformat(), "checks": checks,
               "limitations": ["Chromium desktop/mobile emulation; not full WCAG or real-device certification",

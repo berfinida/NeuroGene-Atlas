@@ -1,7 +1,9 @@
 import { defineConfig } from "@playwright/test";
+const resultsDir = process.env.E2E_DEMO === "1" ? "test-results-demo" : "test-results";
 export default defineConfig({
-  testDir: process.env.E2E_CORE === "1" ? "./e2e-core" : "./e2e", timeout: 45000, fullyParallel: false, workers: 1,
-  reporter: [["list"], ["json", { outputFile: "test-results/results.json" }]],
+  outputDir: `${resultsDir}/artifacts`,
+  testDir: process.env.E2E_DEMO === "1" ? "./e2e-demo" : process.env.E2E_CORE === "1" ? "./e2e-core" : "./e2e", timeout: 45000, fullyParallel: false, workers: 1,
+  reporter: [["list"], ["json", { outputFile: `${resultsDir}/results.json` }]],
   use: { baseURL: process.env.E2E_BASE_URL || "http://127.0.0.1:3000", trace: "retain-on-failure", screenshot: "only-on-failure" },
   projects: [
     { name: "desktop", use: { viewport: { width: 1440, height: 1000 } } },

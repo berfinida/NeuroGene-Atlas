@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.0-rc.1 (Local Candidate, 2026-11-02)
+
+- Continued the interrupted production work without publishing, purchasing hosting or modifying the v0.5.1 Release.
+- Added review/public runtime modes, exact manifest approval gate, safe read-only serving, health checks, request budgets, structured logs and strict origin/host checks.
+- Rejected unlisted symlink directories and unsafe origin settings; added 14 production-policy tests alongside existing source checks.
+- Added a runtime Next.js proxy, standalone build and interactive real-data volcano. Restricted demo views no longer offer unavailable/raw artifacts.
+- Audited 335 research archive entries and prepared a local 59-file review candidate with source hashes and original-input provenance. No data approval is implied.
+- Fixed Next.js security advisories with 15.5.28 and updated certificate/document libraries; numerical/R packages and 204 frozen scientific files remain unchanged.
+- Added demo browser/API checks, isolated browser artifact directories, six deployment/policy documents and explicit remaining release blockers.
+
 ## 0.5.1 (2026-10-12)
 
 - Rechecked original third-study columns, GEO/BioSample and Figshare evidence; restricted unresolved 10/9/8-dependent claims without changing scientific tables.

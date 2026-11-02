@@ -1,7 +1,7 @@
 annotated-doc==0.0.5
 annotated-types==0.8.0
 anyio==4.15.1
-certifi==2026.7.22
+certifi==2026.10.23
 click==8.5.0
 contourpy==1.4.0
 cycler==0.12.1
@@ -21,11 +21,11 @@ openpyxl==3.1.5
 opentelemetry-api==1.45.1
 packaging==26.3
 pandas==3.0.3
-pillow==12.3.0
+pillow==13.0.0
 pydantic==2.14.0
 pydantic_core==2.50.0
 pyparsing==3.3.3
-pypdf==6.20.0
+pypdf==6.21.4
 python-dateutil==2.9.0.post0
 scipy==1.17.1
 six==1.17.0

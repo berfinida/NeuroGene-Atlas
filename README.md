@@ -2,7 +2,15 @@
 
 Reproducible multi-study transcriptomics and network-based exploratory candidate gene analysis in mouse dystrophin-deficient tibialis anterior muscle.
 
-**Author: Berfin Nida Öztürk. Version 0.5.1. Public MIT source; research data are not bundled.**
+**Author: Berfin Nida Öztürk. Published source: v0.5.1. Current working candidate: v0.6.0-rc.1, not publicly deployed or released.**
+
+## Phase 6 Status
+
+The existing dashboard now has a production standalone build, runtime API proxy, separate research/review/public modes, manifest-bound data serving, health checks and an interactive real-data volcano plot. Local review preview: http://127.0.0.1:3010. This is not a public live-demo URL.
+
+The 59-file, approximately 12 MB results candidate is **local review only**. No raw counts, research archive or new Release has been uploaded. GSE284723's 10/9/8 discrepancy remains prominent; exploratory candidates are not clinical biomarkers. The published v0.5.1 tag/asset and 204 original scientific file hashes are preserved.
+
+See [deployment architecture](DEPLOYMENT_ARCHITECTURE.md), [exact local/deployment commands](DEPLOYMENT_GUIDE.md), [data policy](PUBLIC_DATA_POLICY.md), [security audit](PRODUCTION_SECURITY_AUDIT.md), [demo validation](PUBLIC_DEMO_VALIDATION.md) and [approval checklist](DEPLOYMENT_CHECKLIST.md). External hosting, spending, DNS, data exposure and a new Release require explicit approval. Docker, external TLS and Phase 6 hosted CI are not claimed verified.
 
 [Source repository](https://github.com/berfinida/NeuroGene-Atlas) · [Versioned source releases](https://github.com/berfinida/NeuroGene-Atlas/releases)
 
@@ -50,9 +58,9 @@ Candidate weights: statistical/effect/consistency/pathway/network/replication = 
 
 ## Stack And Requirements
 
-Next.js 15.5.27, React 19.1.4, TypeScript 5.8.3, Recharts, Cytoscape.js, FastAPI, pandas, SciPy, NetworkX and Playwright.
+Next.js 15.5.28, React 19.1.4, TypeScript 5.8.3, Recharts, Cytoscape.js, FastAPI, pandas, SciPy, NetworkX and Playwright. The candidate contains security updates to Next.js, certifi, Pillow and pypdf; numerical/R analysis versions and original result files remain unchanged.
 
-Locally tested: macOS ARM64, Node 22.23.1/npm 10.9.8, Python 3.14.5, R 4.4.3, DESeq2 1.46.0, apeglm 1.28.0, jsonlite 2.0.0. Use Node 22 and Python 3.14 with checked-in locks. Source-only Linux CI passed; full-data scientific validation and R reproduction remain local, not hosted. Allow several GB for installed dependencies, browser binaries and analysis scratch space. Docker was unavailable; the optional container is not claimed tested.
+Locally tested: macOS ARM64, Node 22.23.1/npm 10.9.8, Python 3.14.5, R 4.4.3, DESeq2 1.46.0, apeglm 1.28.0, jsonlite 2.0.0. Use Node 22 and Python 3.14 with checked-in locks. Published v0.5.1 source-only Linux CI passed; the local v0.6.0 candidate has not run hosted CI. Full-data scientific validation and R reproduction remain local. Allow several GB for installed dependencies, browser binaries and analysis scratch space. Docker was unavailable; the optional containers are not claimed tested.
 
 ## Installation
 
@@ -82,7 +90,7 @@ The importer verifies SHA-256 and refuses to overwrite changed local artifacts. 
 
 ## Environment And Running
 
-`.env.example` documents shell variables, not credentials. Set `API_INTERNAL_URL` **before building**; the root `.env` is not automatically loaded. No OpenAI/GitHub/API key is required.
+`.env.example` documents shell variables, not credentials. Set `API_INTERNAL_URL` in the frontend **server runtime** environment; the root `.env` is not automatically loaded. No OpenAI/GitHub/API key is required. Research mode below is local-only; use the deployment guide for the smaller review candidate.
 
 Backend terminal, repository root:
 
@@ -94,11 +102,13 @@ Frontend terminal:
 
 ```sh
 cd frontend
-API_INTERNAL_URL=http://127.0.0.1:8000 npm run build
-npm run start -- --port 3000
+npm run build
+cp -R .next/static .next/standalone/.next/
+API_INTERNAL_URL=http://127.0.0.1:8000 NEUROGENE_ALLOW_LOCAL_API=1 \
+HOSTNAME=127.0.0.1 PORT=3000 node .next/standalone/server.js
 ```
 
-Open http://127.0.0.1:3000; API schema at http://127.0.0.1:8000/docs. Development: `API_INTERNAL_URL=http://127.0.0.1:8000 npm run dev`. Other backend ports require rebuilding with that destination. The audited local instance uses frontend 3005/backend 8005.
+Open http://127.0.0.1:3000; API schema at http://127.0.0.1:8000/docs. Development: `API_INTERNAL_URL=http://127.0.0.1:8000 npm run dev`. Backend destinations can now change at server startup without rebuilding. Current review preview uses frontend 3010/backend 8010; research regression tests use 3008/8008.
 
 ## Reproducing Analyses
 
